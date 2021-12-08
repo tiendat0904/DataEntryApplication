@@ -1,0 +1,149 @@
+﻿@page "/req2/cmd2"
+@using Microsoft.AspNetCore.Authorization.Infrastructure
+@inject IJSRuntime JsRuntime
+@inject ICMD2Services _cmd2Services
+@inject ILocalStorageService localStorage
+
+<AuthorizeView>
+    <Authorized>
+        <div class="text-center">
+            CMD2
+        </div>
+        <div class="wrapper">
+            <div class="sidebar">
+                <NavReq2 />
+            </div>
+            <div class="p-3 w-100">
+                <h5 style="color:red">Please provide the Infomation as as below</h5>
+                @foreach (var value in values)
+                {
+                    <div class="row pb-5">
+                        <div class="col-6 pt-3">
+                            <div class="row">
+                                <div class="col-6 text-center">
+                                    <label>Lable 1</label>
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-6 text-center">
+                                    <label>Lable 2</label>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <select class="form-control" readonly="@(Role == 0)" @bind="value.L2">
+                                        <option value="A1">A1</option>
+                                        <option value="B1">B1</option>
+                                        <option value="C1">C1</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-6 text-center">
+                                    <label>Lable 3</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="form-control" readonly="@(Role == 0)" @bind="value.L3">
+                                        <option value="A1">A1</option>
+                                        <option value="B1">B1</option>
+                                        <option value="C1">C1</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-6 text-sm-center">
+                                    <label>Lable 4</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="form-control" readonly="@(Role == 0)" @bind="value.L4">
+                                        <option value="A1">A1</option>
+                                        <option value="B1">B1</option>
+                                        <option value="C1">C1</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-6 text-sm-center">
+                                    <label>Lable 5</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="form-control" readonly="@(Role == 0)" @bind="value.L5">
+                                        <option value="A1">A1</option>
+                                        <option value="B1">B1</option>
+                                        <option value="C1">C1</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-6 text-sm-center">
+                                    <label>Lable 6</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="form-control" readonly="@(Role == 0)" @bind="value.L6">
+                                        <option value="A1">A1</option>
+                                        <option value="B1">B1</option>
+                                        <option value="C1">C1</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row pt-3">
+                                <div class="col-6 text-sm-center">
+                                    <label>Lable 7</label>
+                                </div>
+                                <div class="col-3">
+                                    <select class="form-control" readonly="@(Role == 0)" @bind="value.L7">
+                                        <option value="A1">A1</option>
+                                        <option value="B1">B1</option>
+                                        <option value="C1">C1</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <select class="form-control" readonly="@(Role == 0)" @bind="value.L1">
+                                <option value="A1">A1</option>
+                                <option value="B1">B1</option>
+                                <option value="C1">C1</option>
+                            </select>
+                        </div>
+                    </div>
+                }
+                    <div class="row pt-5">
+                        <div class="col-3 text-center">
+                            <button class="btn btn-outline-success" disabled="@(Role == 0)" @onclick="SaveAsDraft">Save as Draft</button>
+                        </div>
+                        <div class="col-6 text-center">
+                            <button class="btn btn-outline-primary" disabled="@(Role == 0)" @onclick="Submit">Submit</button>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </Authorized>
+</AuthorizeView>
+
+@code {
+    IList<CMD2Model> values = new List<CMD2Model>();
+    private int Role = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        values = await _cmd2Services.GetValuesOfCMD2();
+        var role = await localStorage.GetItemAsync<int?>("role");
+        Role = role ?? 0;
+    }
+
+    private async Task SaveAsDraft()
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Saves the data in the database and can be edited?");
+        if (confirmed)
+        {
+            var result = await _cmd2Services.Save(values, 0);
+        }
+    }
+    private async Task Submit()
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Do you want to Submit?");
+        if (confirmed)
+        {
+            var result = await _cmd2Services.Save(values, 1);
+        }
+    }
+}

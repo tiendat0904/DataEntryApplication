@@ -16,6 +16,7 @@ namespace DataEntryApplication.Client
             services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICMD1Services, CMD1Service>();
+            services.AddScoped<ICMD2Services, CMD2Service>();
         }
 
         public void Configure(IComponentsApplicationBuilder app)

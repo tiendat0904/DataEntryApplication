@@ -61,6 +61,8 @@ namespace DataEntryApplication.Server
             });
 
             services.AddTransient<ICmd1Service, CMD1Service>();
+            services.AddTransient<ICmd2Service, CMD2Service>();
+            services.AddTransient<ICmd3Service, CMD3Service>();
             services.AddTransient<IAccountService, AccountService>();
         }
 

@@ -10,6 +10,8 @@ namespace DataEntryApplication.Server
         {
             CreateMap<CMD1, CMD1Model>();
             CreateMap<CMD1Model, CMD1>();
+            CreateMap<CMD2, CMD2Model>();
+            CreateMap<CMD2Model, CMD2>();
         }
     }
 }
